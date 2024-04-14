@@ -40,6 +40,7 @@ func HandleConnection(conn net.Conn) {
 	request := string(buf)
 	status := strings.Split(request, "\r\n")
 	path := strings.Split(status[0], " ")[1]
+	method := strings.Split(status[0], " ")[0]
 	
 
 	var response []byte
@@ -60,7 +61,17 @@ func HandleConnection(conn net.Conn) {
 			conn.Write(response)
 			return
 		}
-		response = []byte("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + strconv.Itoa(len(data)) + "\r\n\r\n" + string(data) + "\r\n")
+		if method == "GET" {
+			response = []byte("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + strconv.Itoa(len(data)) + "\r\n\r\n" + string(data) + "\r\n")
+		} else if method == "POST" {
+			err := os.WriteFile(filepath.Join(dir, file), data, 0644)
+			if err != nil {
+				fmt.Println("Error writing data to file")
+				return
+			}
+			response = []byte("HTTP/1.1 201 OK\r\n\r\n")
+		}
+		
 	} else {
 		response = []byte("HTTP/1.1 404 Not Found\r\n\r\n")
 	}
