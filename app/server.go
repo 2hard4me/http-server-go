@@ -69,7 +69,7 @@ func HandleConnection(conn net.Conn) {
 				fmt.Println("Error writing data to file")
 				return
 			}
-			response = []byte("HTTP/1.1 201\r\n\r\n")
+			response = []byte("HTTP/1.1 201 Created\r\n\r\n")
 		}
 		
 	} else {
