@@ -53,7 +53,7 @@ func HandleConnection(conn net.Conn) {
 		userAgent := strings.Split(status[2], " ")[1]
 		response = []byte("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + strconv.Itoa(len([]rune(userAgent))) + "\r\n\r\n" + userAgent + "\r\n")
 	} else if strings.HasPrefix(path, "/files/") {
-		file := path[7:]
+		file := strings.Split(path, "/")[2]
 		dir := os.Args[2]
 		data, err := os.ReadFile(filepath.Join(dir, file))
 		if err != nil {
