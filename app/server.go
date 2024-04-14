@@ -45,7 +45,7 @@ func HandleConnection(conn net.Conn) {
 		response = []byte("HTTP/1.1 200 OK\r\n\r\n")
 	} else if strings.HasPrefix(path, "/echo") {
 		randStr := path[6:]
-		response = []byte("HTTP/1.1 200 OK\r\n\r\nContent-Type: text/plain\r\nContent-Length: " + strconv.Itoa(len([]rune(randStr))) + "\r\n\r\n" + randStr + "\r\n")
+		response = []byte("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + strconv.Itoa(len([]rune(randStr))) + "\r\n\r\n" + randStr + "\r\n")
 	} else if strings.HasPrefix(path, "/user-agent") {
 		response = []byte("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + strconv.Itoa(len([]rune(userAgent))) + "\r\n\r\n" + userAgent + "\r\n")
 	}else {
