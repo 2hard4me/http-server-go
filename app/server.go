@@ -38,11 +38,18 @@ func HandleConnection(conn net.Conn) {
 	request := string(buf)
 	status := strings.Split(request, "\r\n")
 	path := strings.Split(status[0], " ")[1]
-	randomStr := path[5:]
-	strLen := strconv.Itoa(len([]rune(randomStr)))
-	response := "HTTP/1.1 200 OK\r\n\r\nContent-Type: text/plain\r\nContent-Length: " + strLen + "\r\n\r\n" + randomStr + "\r\n"
 
-	_, err = conn.Write([]byte(response))
+	var response []byte
+	if path == "/" {
+		response = []byte("HTTP/1.1 200 OK\r\n\r\n")
+	} else if strings.HasPrefix(path, "/echo") {
+		randStr := path[5:]
+		response = []byte("HTTP/1.1 200 OK\r\n\r\nContent-Type: text/plain\r\nContent-Length: " + strconv.Itoa(len([]rune(randStr))) + "\r\n\r\n" + randStr + "\r\n")
+	} else {
+		response = []byte("HTTP/1.1 404 Not Found\r\n\r\n")
+	}
+
+	_, err = conn.Write(response)
 	if err != nil {
 		fmt.Println("Error responding")
 		return
