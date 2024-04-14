@@ -38,7 +38,7 @@ func HandleConnection(conn net.Conn) {
 	request := string(buf)
 	status := strings.Split(request, "\r\n")
 	path := strings.Split(status[0], " ")[1]
-	randomStr := strings.Split(path, "/")[0]
+	randomStr := path[5:]
 	strLen := strconv.Itoa(len([]rune(randomStr)))
 	response := "HTTP/1.1 200 OK\r\n\r\nContent-Type: text/plain\r\nContent-Length: " + strLen + "\r\n\r\n" + randomStr + "\r\n"
 
