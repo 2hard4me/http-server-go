@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -37,15 +38,11 @@ func HandleConnection(conn net.Conn) {
 	request := string(buf)
 	status := strings.Split(request, "\r\n")
 	path := strings.Split(status[0], " ")[1]
+	randomStr := strings.Split(path, "/")[0]
+	strLen := strconv.Itoa(len([]rune(randomStr)))
+	response := "HTTP/1.1 200 OK\r\n\r\nContent-Type: text/plain\r\nContent-Length: " + strLen + "\r\n\r\n" + randomStr + "\r\n"
 
-	var response []byte
-	if path == "/" {
-		response = []byte("HTTP/1.1 200 OK\r\n\r\n")
-	} else {
-		response = []byte("HTTP/1.1 404 Not Found\r\n\r\n")
-	}
-
-	_, err = conn.Write(response)
+	_, err = conn.Write([]byte(response))
 	if err != nil {
 		fmt.Println("Error responding")
 		return
