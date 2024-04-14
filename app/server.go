@@ -57,9 +57,10 @@ func HandleConnection(conn net.Conn) {
 		data, err := os.ReadFile(filepath.Join(dir, file))
 		if err != nil {
 			response = []byte("HTTP/1.1 404 Not Found\r\n\r\n")
-		} else {
-			response = []byte("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + strconv.Itoa(len(data)) + "\r\n\r\n" + string(data) + "\r\n")
-		}
+			conn.Write(response)
+			return
+		} 
+		response = []byte("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + strconv.Itoa(len(data)) + "\r\n\r\n" + string(data) + "\r\n")
 	} else {
 		response = []byte("HTTP/1.1 404 Not Found\r\n\r\n")
 	}
