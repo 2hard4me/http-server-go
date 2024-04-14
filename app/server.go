@@ -27,7 +27,7 @@ func main() {
 }
 
 func HandleConnection(conn net.Conn) {
-	//defer conn.Close()
+	defer conn.Close()
 
 	buf := make([]byte, 1024)
 	_, err := conn.Read(buf)
