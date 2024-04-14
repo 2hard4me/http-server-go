@@ -42,7 +42,7 @@ func HandleConnection(conn net.Conn) {
 	if path == "/" {
 		response = []byte("HTTP/1.1 200 OK\r\n\r\n")
 	} else {
-		response = []byte("HTTP/1.1 404 Not Found")
+		response = []byte("HTTP/1.1 404 Not Found\r\n\r\n")
 	}
 
 	_, err = conn.Write(response)
