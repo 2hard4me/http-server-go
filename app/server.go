@@ -64,7 +64,9 @@ func HandleConnection(conn net.Conn) {
 		if method == "GET" {
 			response = []byte("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + strconv.Itoa(len(data)) + "\r\n\r\n" + string(data) + "\r\n")
 		} else if method == "POST" {
-			err := os.WriteFile(filepath.Join(dir, file), []byte(data), 0644)
+			body := strings.Split(request, "\r\n\r\n")[1]
+			body = strings.Trim(body, "\x00/")
+			err := os.WriteFile(filepath.Join(dir, file), []byte(body), 0644)
 			if err != nil {
 				fmt.Println("Error writing data to file")
 				return
