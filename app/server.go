@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -50,6 +51,15 @@ func HandleConnection(conn net.Conn) {
 	} else if strings.HasPrefix(path, "/user-agent") {
 		userAgent := strings.Split(status[2], " ")[1]
 		response = []byte("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + strconv.Itoa(len([]rune(userAgent))) + "\r\n\r\n" + userAgent + "\r\n")
+	} else if strings.HasPrefix(path, "/files") {
+		file := strings.Split(status[0], "/files/")[1]
+		dir := os.Args[2]
+		data, err := os.ReadFile(filepath.Join(dir, file))
+		if err != nil {
+			response = []byte("HTTP/1.1 404 Not Found\r\n\r\n")
+		} else {
+			response = []byte("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + strconv.Itoa(len(data)) + "\r\n\r\n" + string(data) + "\r\n")
+		}
 	} else {
 		response = []byte("HTTP/1.1 404 Not Found\r\n\r\n")
 	}
