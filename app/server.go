@@ -43,7 +43,7 @@ func HandleConnection(conn net.Conn) {
 	var response []byte
 	if path == "/" {
 		response = []byte("HTTP/1.1 200 OK\r\n\r\n")
-	} else if path == "/user-agent" {
+	} else if strings.HasPrefix(path, "/user-agent") {
 		response = []byte("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + strconv.Itoa(len([]rune(userAgent))) + "\r\n\r\n" + userAgent + "\r\n")
 	} else {
 		response = []byte("HTTP/1.1 404 Not Found\r\n\r\n")
